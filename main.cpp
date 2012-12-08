@@ -62,61 +62,6 @@ int searchTime(std::vector<int> &allocation, std::vector<Job*> &jobs, int dueDat
 	return t-1;
 }
 
-int simulate2(int initialTime, vector<Job*> &allocation,int dueDate) {
-  int t = initialTime;
-  int penalty = 0;
-
-  for (unsigned int j = 0; j < allocation.size(); j++) {
-    int p = calculatePenalty(allocation[j],t,dueDate);
-    penalty += p;
-    t += allocation[j]->processingTime;
-
-  }
-
-  return penalty;
-}
-
-
-int searchDueDateDiv(vector<Job*> allocation, int dueDate) {
-  int opa = 0;
-  int i;
-  for (i = 0; i < allocation.size(); i++) {
-    opa += allocation[i]->processingTime;
-    if (opa > dueDate) {
-      break;
-    }
-  }  
-  return i;
-}
-
-int searchTime2(vector<Job*> &allocation, int dueDate, int *result) {
-  
-  vector<Job*>::iterator it = find(allocation.begin(), allocation.end(), allocation[searchDueDateDiv(allocation,dueDate)]);
-  sort(it,allocation.end(),sortPB);
-	int t = 0;
-	int penalty = simulate2(t, allocation, dueDate);
-	for (t = 1; t <= dueDate; t++) {
-		int npenalty = simulate2(t, allocation, dueDate);
-		if (npenalty < penalty)
-			penalty = npenalty;
-		else
-			break;
-	}	
-	*result = penalty;
-  // cout << simulate(t-1,allocation,dueDate) << endl;
-	return t-1;
-}
-
-
-
-void mergeAllocs(vector<Job*> &merged, vector<Job*> Before, vector<Job*> After) {  
-  merged.clear();
-  for (int i = 0; i < After.size(); i++)
-    merged.push_back(After[i]);
-  for (int i = 0; i < Before.size(); i++)
-    merged.push_back(Before[i]);  
-}
-
 int main(int argc, char **argv) {
 	srand ( 2 );
 
@@ -231,50 +176,14 @@ cout.precision(20);
 					population.push_back(std::pair<std::vector<int>,int> (std::vector<int>(c1),						
 								  	  result));
 				}
-				/*
-				if (h/4 > ((double) rand() / (((float)RAND_MAX)+1))) {
-					mutation(c1);
-					t = searchTime(c1,instances[inst],dueDates[inst]);
-					population.push_back(std::pair<std::vector<int>,int> (std::vector<int>(c1),
-								  	  simulate(t,c1,instances[inst],dueDates[inst])));					
-				} else {
-					t = searchTime(c1,instances[inst],dueDates[inst]);
-					population.push_back(std::pair<std::vector<int>,int> (std::vector<int>(c1),						
-								  	  simulate(t,c1,instances[inst],dueDates[inst])));
-				}*/
+
 			}
 			sort(population.begin(), population.end(), sort_pred());			
 
 			population.erase(population.end()-(popSize/4), population.end());
-		
+			cout << population[0].second << endl;
 		}
-		// int result2;
 
-		// std::vector<Job*> allocs, alloc;
-
-		// for (int i = 0; i < population[0].first.size(); i++) {
-		// 	Job * job = instances[inst][population[0].first[i]];
-		// 	allocs.push_back(job);
-		// }
-
-		// std::vector<Job*> Before, After;
-
-		// // Poe em vshape
-		// int div = searchDueDateDiv(allocs,dueDates[inst]);
- 	// 	for (int i = 0; i < allocs.size(); i++) {
-  //   		if (i < div)
-  //     			Before.push_back(allocs[i]);
-  //   		else
-  //     			After.push_back(allocs[i]);
-  // 		}
-
-  // 		sort(After.begin(), After.end(), sortPB);
-  // 		sort(Before.begin(), Before.end(), sortPA);
-  
-  // 		mergeAllocs(alloc,After,Before);
-	
-  // 		searchTime2(allocs, dueDates[inst], &result2);
-		
 		cout << "* " <<  population[0].second << endl;
 		cout << "Time: " << (1.0*(clock()-start)/CLOCKS_PER_SEC) << " s" << endl;
 	}
