@@ -15,7 +15,7 @@ Iter binary_find(Iter begin, Iter end, T val)
         return end; // not found
 }
 
-void printDeque(std::deque<int> &v) {
+void printvector(std::vector<int> &v) {
 	std::cout << "[";
 	for (int i = 0; i < v.size()-1; i++) {
 		std::cout << v[i] << " ";
@@ -23,8 +23,8 @@ void printDeque(std::deque<int> &v) {
 	std::cout << v[v.size()-1] << "]" << std::endl;
 }
 
-void crossOver(std::deque<int> &v1, std::deque<int> &v2,
-	std::deque<int> &c1, std::deque<int> &c2) {
+void crossOver(std::vector<int> &v1, std::vector<int> &v2,
+	std::vector<int> &c1) {
 
 	unsigned int k, m, first, second, size;
 
@@ -46,27 +46,24 @@ void crossOver(std::deque<int> &v1, std::deque<int> &v2,
 
 	for (int i = 0; i < first; i++) {
 		c1[i] = v1[i];
-		c2[i] = v2[i];
 	}
 	for (int i = first; i < second; i++) {
-		c1[i] = v2[i];
-	 	c2[i] = v1[i];
+		c1[i] = v2[i];	 	
 	}
 	for (int i = second; i < size; i++) {
 		c1[i] = v1[i];
-		c2[i] = v2[i];
 	}	
 
 	removeDuplicates(c1);
-	removeDuplicates(c2);
-
 }
 
-void removeDuplicates(std::deque<int> &c) {
+void removeDuplicates(std::vector<int> &c) {
 
-	std::deque<int> duplicates;
-	std::deque<int> missing;	
-	std::deque<int> aux = std::deque<int>(c);
+	std::vector<int> duplicates;
+	std::vector<int> missing;	
+	std::vector<int> aux = std::vector<int>(c);
+
+	std::sort(aux.begin(), aux.end());
 
 	for (int i = 0; i < c.size(); i++) {
 
@@ -78,9 +75,9 @@ void removeDuplicates(std::deque<int> &c) {
     	    missing.push_back(i);
 		}			
 	}
-	std::deque<int>::iterator it;
+	std::vector<int>::iterator it;
 	for (int i = 0; i < duplicates.size(); i++) {
-		it = std::find(c.begin(), c.end(), aux[duplicates[i]]);	
+		it = std::find(c.begin(), c.end(), aux[duplicates[i]]);			
 		*it = missing[i];
 	}		
 	
@@ -90,7 +87,7 @@ void removeDuplicates(std::deque<int> &c) {
 	aux.clear();
 }
 
-inline void mutation(std::deque<int> &v) {
+void mutation(std::vector<int> &v) {
 	unsigned int k, m, n, size;
 
 	size = v.size();
@@ -103,3 +100,13 @@ inline void mutation(std::deque<int> &v) {
 	v[k] = v[m];
 	v[m] = n;
 }
+
+
+void printMeanCost(std::vector<std::pair<std::vector<int>, int> > &population) {
+	long sum = 0;
+	for (int k = 0; k < population.size(); k++) {
+		sum += population[k].second;
+	}
+	std::cout << ": " << 1.0*sum/population.size() << std::endl;
+}
+
